@@ -1,0 +1,86 @@
+<!-- /templates/environmental.html -->
+{% extends "base.html" %}  
+{% block title %}Environmental Data - Historical Plotting{% endblock %}  
+  
+{% block content %}  
+<div class="hero" style="text-align: left;">
+    <h1>Environment Monitoring</h1>
+    <p>Visualize historical sensor trends retrieved directly from the NEON cloud database.</p>
+</div>
+
+<div class="card" style="margin-bottom: 3rem;">
+    <h3>Historical Data Selection</h3>
+    <form method="POST" action="{{ url_for('environmental_data') }}" style="display: flex; gap: 2rem; align-items: flex-end; padding-top: 1rem;">
+        <div>
+            <label for="date" style="font-weight: bold; color: #1c1c1e;">Select Date:</label>
+            <input type="date" id="date" name="date" required value="{{ selected_date or '' }}" style="max-width: 180px;">
+        </div>
+        <div>
+            <label for="sensor" style="font-weight: bold; color: #1c1c1e;">Select Sensor:</label>
+            <select id="sensor" name="sensor" required style="max-width: 180px;">
+                <option value="">-- Choose Sensor --</option>
+                <option value="temperature" {% if selected_sensor == 'temperature' %}selected{% endif %}>Temperature (&deg;C)</option>
+                <option value="humidity" {% if selected_sensor == 'humidity' %}selected{% endif %}>Humidity (%)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn" style="margin: 0;">Plot Data</button>
+    </form>
+</div>
+
+<div class="chart-container">
+    {% if error %}
+        <div class="status-block status-block-error">
+            Error retrieving data: {{ error }}
+        </div>
+    {% elif chart_data %}
+        <h3 style="margin-bottom: 1.5rem; color: #007aff;">{{ selected_sensor.capitalize() }} Trend for {{ selected_date }}</h3>
+        <canvas id="historicalChart" style="max-height: 450px;"></canvas>
+    {% else %}
+        <p style="margin-top: 1rem; color: #5a5a5e;">Select a date and sensor to display the historical data plot.</p>
+    {% endif %}
+</div>
+
+{% if chart_data %}
+<script>
+    const jsonString = `{{ chart_data | safe }}`; 
+    const chartData = JSON.parse(jsonString); 
+    const sensorName = chartData.datasets[0].label;
+
+    const ctx = document.getElementById('historicalChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line', 
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: `${sensorName} Historical Data (${chartData.labels.length} readings)`,
+                    font: { size: 16, weight: 'bold' }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: `${sensorName} Value`,
+                        color: '#1c1c1e'
+                    },
+                    grid: { color: '#f0f0f0' }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time (HH:MM)',
+                        color: '#1c1c1e'
+                    },
+                    grid: { color: '#f0f0f0' }
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,63 @@
+<!-- /templates/home.html -->
+{% extends "base.html" %}  
+{% block title %}Home - System Overview{% endblock %}  
+  
+{% block content %}  
+<div class="hero">  
+    <h1>System Overview</h1>  
+    <p>Live sensor readings and core system status.</p>  
+</div>
+
+<!-- Live Sensor Metrics Grid -->
+<div class="card-grid">
+    <!-- Metric Card 1: Temperature -->
+    <div class="metric-card">
+        <h4>TEMPERATURE</h4>
+        <!-- Use &deg;C for degrees Celsius, better than a plain C -->
+        <span class="metric-value metric-value-temp">{{ live_data.temperature }} &deg;C</span>
+        <p>Current reading from the DHT sensor.</p>
+    </div>
+
+    <!-- Metric Card 2: Humidity -->
+    <div class="metric-card">
+        <h4>HUMIDITY</h4>
+        <span class="metric-value metric-value-humid">{{ live_data.humidity }} %</span>
+        <p>Last update: N/A</p>
+    </div>
+
+    <!-- Metric Card 3: Motion/Security Status -->
+    <div class="metric-card">
+        <h4>SECURITY STATUS</h4>
+        {% if live_data.motion == '1' %}
+            <!-- Using the 'detected' class style from CSS -->
+            <span class="metric-value detected">INTRUSION</span>
+            <p>Motion detected recently.</p>
+        {% else %}
+            <!-- Using the 'clear' class style from CSS -->
+            <span class="metric-value clear">CLEAR</span>
+            <p>No recent motion detected.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quick Actions and System Control Sections -->
+<div class="card-grid" style="margin-top: 3rem;">
+    <!-- Card 4: Quick Actions (Mimicking the button panel) -->
+    <div class="card">
+        <h3>Quick Actions</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+            <a href="{{ url_for('environmental_data') }}" class="btn" style="width: 100%; margin: 0; background-color: #007aff;">View Environmental Data</a>
+            <a href="{{ url_for('manage_security') }}" class="btn btn-yellow" style="width: 100%; margin: 0;">Manage Security</a>
+            <a href="{{ url_for('device_control') }}" class="btn btn-green" style="width: 100%; margin: 0;">Control Devices</a>
+        </div>
+    </div>
+
+    <!-- Card 5: System Details (Placeholder for other info) -->
+    <div class="card" style="grid-column: span 2;">
+        <h3>System Details and Logging</h3>
+        <p>This section can be updated to display the system's current armed mode (fetched from AIO), the last image capture timestamp, or a brief log summary.</p>
+        <p style="margin-top: 10px; font-style: italic; color: #5a5a5e;">System runs on Flask via Render.com and logs to NEON PostgreSQL DB.</p>
+    </div>
+</div>
+
+{% endblock %}

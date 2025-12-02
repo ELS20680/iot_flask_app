@@ -1,0 +1,30 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>{% block title %}DomiSafe - IoT Dashboard{% endblock %}</title>  
+    <!-- styles.css must be in the static folder -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  
+    <!-- Include Chart.js library for plotting -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
+</head>  
+<body>  
+    <nav class="navbar">  
+        <div class="nav-container">  
+            <h1 class="nav-logo">DomiSafe</h1>  
+            <ul class="nav-menu">  
+                <!-- 5 Required Pages -->
+                <li><a href="{{ url_for('home') }}" class="nav-link">Home (Dashboard)</a></li>  
+                <li><a href="{{ url_for('about') }}" class="nav-link">About</a></li>  
+                <li><a href="{{ url_for('environmental_data') }}" class="nav-link">Environmental Data</a></li>  
+                <li><a href="{{ url_for('manage_security') }}" class="nav-link">Manage Security</a></li>  
+                <li><a href="{{ url_for('device_control') }}" class="nav-link">Device Control</a></li>  
+            </ul>  
+        </div>  
+    </nav>  
+    <div class="container">  
+        {% block content %}{% endblock %}  
+    </div>  
+</body>  
+</html>

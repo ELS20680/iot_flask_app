@@ -1,0 +1,72 @@
+<!-- /templates/manage_security.html -->
+{% extends "base.html" %}  
+{% block title %}Manage Security{% endblock %}  
+  
+{% block content %}  
+<div class="hero" style="text-align: left;">
+    <h1>Security Monitoring</h1>
+    <p>Manage the security system mode and review historical intrusion logs.</p>
+</div>
+
+<div class="card-grid" style="grid-template-columns: 1fr;">
+    <!-- System Control Section -->
+    <div class="card">
+        <h3>Security System Control</h3>
+        <p style="margin-bottom: 15px;">Use these controls to remotely arm or disarm the home security system via Adafruit IO.</p>
+
+        {% if status_msg %}
+            <div class="status-block status-block-info" style="margin-bottom: 2rem;">
+                {{ status_msg }}
+            </div>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('manage_security') }}" style="display: inline-block; margin-right: 1.5rem;">
+            <input type="hidden" name="action" value="arm">
+            <button type="submit" class="btn btn-red">ARM SYSTEM</button>
+        </form>
+        <form method="POST" action="{{ url_for('manage_security') }}" style="display: inline-block;">
+            <input type="hidden" name="action" value="disarm">
+            <button type="submit" class="btn btn-green">DISARM SYSTEM</button>
+        </form>
+    </div>
+</div>
+
+<!-- Intrusion Log Fetching and Display -->
+<div class="card" style="margin-top: 3rem;">
+    <h3>Intrusion Log History</h3>
+    <p>Select a date to retrieve all motion events and associated image capture links from the cloud database.</p>
+    
+    <form method="POST" action="{{ url_for('manage_security') }}" style="display: flex; gap: 2rem; align-items: flex-end; padding-top: 1rem;">
+        <input type="hidden" name="action" value="get_logs">
+        <div>
+            <label for="log_date" style="font-weight: bold; color: #1c1c1e;">Select Date:</label>
+            <input type="date" id="log_date" name="log_date" required value="{{ selected_log_date or '' }}" style="max-width: 180px;">
+        </div>
+        <button type="submit" class="btn" style="margin: 0;">Fetch Logs</button>
+    </form>
+
+    <div style="margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1.5rem;">
+        {% if log_error %}
+            <div class="status-block status-block-error">Error fetching logs: {{ log_error }}</div>
+        {% elif intrusion_logs|length > 0 %}
+            <h4 style="margin-bottom: 1rem; color: #007aff;">{{ intrusion_logs|length }} Intrusion Events Found on {{ selected_log_date }}:</h4>
+            <ul style="list-style-type: none; padding: 0;">
+            {% for log in intrusion_logs %}
+                <li style="padding: 0.75rem 0; border-bottom: 1px dashed #f0f0f0;">
+                    <span style="font-weight: bold; color: #ff3b30;">{{ log.timestamp }}</span>: Motion Event. 
+                    {% if log.image_path and log.image_path != "No image recorded" %}
+                        <a href="{{ log.image_path }}" target="_blank" class="nav-link" style="padding: 0; display: inline-block; border-bottom: none;">(View Image Link)</a>
+                    {% else %}
+                        (<span style="font-style: italic; color: #8e8e93;">No image link saved</span>)
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% elif selected_log_date %}
+            <p>No intrusions recorded for {{ selected_log_date }}.</p>
+        {% else %}
+            <p>Select a date above to display historical intrusion events.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

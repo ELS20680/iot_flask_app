@@ -1,0 +1,248 @@
+/* --- Global Reset and Typography ---
+was done with AI just for help with css to make it look better */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* High contrast, clean white base */
+    font-family: 'Inter', sans-serif; 
+    background-color: #f9f9f9; 
+    color: #1c1c1e; /* Near black text for better contrast */
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 3rem auto; /* Generous vertical space */
+    padding: 0 1.5rem;
+}
+
+h1, h2, h3 {
+    color: #1c1c1e;
+    font-weight: 700;
+}
+
+h2 {
+    /* Minimalist section separation */
+    border-bottom: 1px solid #e0e0e0; 
+    padding-bottom: 0.8rem;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+/* --- Navigation Bar (Sleek Dark Look) --- */
+.navbar {
+    background-color: #1c1c1e; /* Deep dark navigation */
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    color: #ffffff;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2.5rem;
+}
+
+.nav-link {
+    color: #cccccc;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+.nav-link:hover {
+    color: #007aff; /* Apple-esque blue */
+    border-bottom: 2px solid #007aff;
+}
+
+/* --- Hero/Dashboard Styling (Clean and Minimal) --- */
+.hero {
+    text-align: center;
+    padding: 1rem 0 3rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    color: #1c1c1e;
+}
+
+.hero p {
+    color: #8e8e93; /* Subtle gray subtitle */
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+/* --- Card Grid Layout (Emphasis on Content) --- */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Very soft shadow */
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid #e0e0e0; /* Subtle border for definition */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+.card p {
+    color: #8e8e93;
+    font-size: 0.95rem;
+}
+
+/* --- NEW: Single Metric Card Styling (For Dashboard Live Values) --- */
+/* This mimics the clean, segmented component style of the reference site */
+.metric-card {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    transition: box-shadow 0.3s;
+}
+
+.metric-card h4 {
+    color: #8e8e93;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* --- Button Styling (Clean and Elevated) --- */
+.btn {
+    display: inline-block;
+    background-color: #007aff; /* Primary Action Blue */
+    color: white;
+    padding: 0.8rem 1.8rem;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s, opacity 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 122, 255, 0.3);
+    margin-right: 0.75rem;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    opacity: 0.95;
+}
+
+/* Specific color overrides for control buttons */
+.btn-red { background-color: #ff3b30; box-shadow: 0 2px 4px rgba(255, 59, 48, 0.3); }
+.btn-red:hover { background-color: #cc0000; }
+.btn-green { background-color: #34c759; box-shadow: 0 2px 4px rgba(52, 199, 89, 0.3); }
+.btn-green:hover { background-color: #28a745; }
+.btn-yellow { background-color: #ff9500; box-shadow: 0 2px 4px rgba(255, 149, 0, 0.3); }
+.btn-yellow:hover { background-color: #e58200; }
+
+/* --- Chart Container --- */
+.chart-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-top: 3rem;
+    border: 1px solid #e0e0e0;
+}
+
+/* --- Input and Select Styling --- */
+input[type="date"], select, input[type="text"], textarea {
+    padding: 0.75rem;
+    border: 1px solid #d1d1d6;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fefefe;
+}
+
+input[type="date"]:focus, select:focus, input[type="text"]:focus, textarea:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); /* Focus ring */
+    outline: none;
+}
+
+/* --- Status/Error Message Styling (Clean Error Reporting) --- */
+.status-block {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.4;
+    background-color: white; /* Clean white background for all statuses */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* SUCCESS: For confirming action like turning a light ON/OFF */
+.status-block-success {
+    color: #34c759; /* Green text */
+    border: 1px solid #34c759;
+}
+
+/* ERROR: For failures like API or DB connection errors */
+.status-block-error {
+    color: #ff3b30; /* Red text */
+    border: 1px solid #ff3b30;
+    background-color: #fffafb; /* Very slight pink hint */
+}
+
+/* INFO: For general system status updates like ARMING/DISARMING or LCD text */
+/* This is a clean, neutral look, resolving the "ugly green" issue for system changes. */
+.status-block-info {
+    color: #1c1c1e; /* Dark text */
+    border: 1px solid #d1d1d6; /* Subtle grey border */
+    background-color: #f0f7ff; /* Very light, professional blue background */
+}
+
+/* Specific dashboard live value styles */
+.metric-value.temperature { color: #ff3b30; }
+.metric-value.humidity { color: #007aff; }
+.metric-value.detected { color: #ff9500; }
+.metric-value.clear { color: #34c759; }

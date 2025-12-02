@@ -1,0 +1,83 @@
+<!-- /templates/about.html -->
+{% extends "base.html" %}  
+{% block title %}About - System Information{% endblock %}  
+  
+{% block content %}  
+<div class="hero" style="text-align: left;">
+    <h1>About DomiSafe HomeGuardian</h1>
+    <p>A comprehensive overview of the IoT system architecture, features, and technology stack.</p>
+</div>
+
+<div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="card">
+        <h3>Project Scope & Features</h3>  
+        <p style="margin-bottom: 1.5rem; color: #5a5a5e;">This application serves as the central monitoring and control interface for the DomiSafe IoT Home Automation and Security System, fulfilling all requirements for Milestone 3.</p>
+        
+        <ul style="list-style-type: none; padding: 0; margin-top: 15px;">
+            <!-- Live Sensor Data -->
+            <li style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #f0f0f0;">
+                <strong style="display: block; margin-bottom: 5px; color: #007aff; font-size: 1.1rem;">Live Sensor Data:</strong>
+                <div style="color: #5a5a5e; padding-left: 10px; border-left: 3px solid #007aff;">
+                    Real-time Temperature, Humidity, and Motion status via Adafruit IO.
+                </div>
+            </li>
+            
+            <li style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #f0f0f0;">
+                <strong style="display: block; margin-bottom: 5px; color: #007aff; font-size: 1.1rem;">Historical Visualization:</strong>
+                <div style="color: #5a5a5e; padding-left: 10px; border-left: 3px solid #007aff;">
+                    Plots sensor data trends for any selected date using PostgreSQL (NEON).
+                </div>
+            </li>
+            
+            <li style="margin-bottom: 10px;">
+                <strong style="display: block; margin-bottom: 5px; color: #007aff; font-size: 1.1rem;">Actuator Control:</strong>
+                <div style="color: #5a5a5e; padding-left: 10px; border-left: 3px solid #007aff;">
+                    Remote control of the Living Room Light, System Mode (Arm/Disarm), and LCD Screen Message.
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="card">  
+        <h3>System Architecture & Technology</h3>  
+        <p style="margin-bottom: 1.5rem; color: #5a5a5e;">The system is built on a resilient, hybrid cloud architecture:</p>
+        
+        <ul style="list-style-type: none; padding: 0; margin-top: 15px;">
+            <!-- Web Backend -->
+            <li style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #f0f0f0;">
+                <strong style="display: block; margin-bottom: 5px; color: #007aff; font-size: 1.1rem;">Web Backend:</strong>
+                <div style="color: #5a5a5e; padding-left: 10px; border-left: 3px solid #1c1c1e;">
+                    Python Flask Framework, hosted on Render.com.
+                </div>
+            </li>
+            
+            <li style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #f0f0f0;">
+                <strong style="display: block; margin-bottom: 5px; color: #ff3b30; font-size: 1.1rem;">Data Broker / Live Control:</strong>
+                <div style="color: #5a5a5e; padding-left: 10px; border-left: 3px solid #1c1c1e;">
+                    Adafruit IO (used for both MQTT communication with the Pi and HTTP API access from Flask).
+                </div>
+            </li>
+            
+            <li style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #f0f0f0;">
+                <strong style="display: block; margin-bottom: 5px; color: #34c759; font-size: 1.1rem;">Data Storage:</strong>
+                <div style="color: #5a5a5e; padding-left: 10px; border-left: 3px solid #1c1c1e;">
+                    PostgreSQL database (NEON.com) for historical data and intrusion logs.
+                </div>
+            </li>
+            
+            <li style="margin-bottom: 10px;">
+                <strong style="display: block; margin-bottom: 5px; color: #ff9500; font-size: 1.1rem;">Client-Side Tools:</strong>
+                <div style="color: #5a5a5e; padding-left: 10px; border-left: 3px solid #1c1c1e;">
+                    Chart.js for interactive data visualization.
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 3rem;">
+    <h3>Data Flow Resilience</h3>
+    <p>The Raspberry Pi client is designed to handle network failure by logging all sensor data to a local <strong>SQLite database</strong>. When the internet connection is restored, the Pi synchronizes the unsynced local records with the cloud database (NEON), ensuring no data is lost.</p>
+</div>
+
+{% endblock %}

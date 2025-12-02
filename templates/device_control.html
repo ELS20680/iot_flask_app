@@ -1,0 +1,123 @@
+<!-- /templates/device_control.html -->
+{% extends "base.html" %}  
+{% block title %}Device Control{% endblock %}  
+  
+{% block content %}  
+<div class="hero" style="text-align: left;">
+    <h1>Device Control</h1>
+    <p>Remotely control actuators and send commands to the Raspberry Pi via Adafruit IO.</p>
+</div>
+
+<div class="card-grid">
+    <div class="card">
+        <h3>Living Room Light</h3>
+        <p style="margin-bottom: 15px;">Toggles power to the light fixture, controlling the output LED.</p>
+        
+        <div style="margin-top: 10px; display: flex; gap: 10px;"> 
+            <button class="btn btn-green control-btn" data-device="light" data-state="ON" style="flex-grow: 1; margin: 0;">Turn ON</button>
+            <button class="btn btn-red control-btn" data-device="light" data-state="OFF" style="flex-grow: 1; margin: 0;">Turn OFF</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>System Mode</h3>
+        <p style="margin-bottom: 15px;">Sets the operational mode for security monitoring (Armed or Disarmed).</p>
+
+        <div style="margin-top: 10px; display: flex; gap: 10px;"> 
+            <button class="btn btn-red control-btn" data-device="mode" data-state="ON" style="flex-grow: 1; margin: 0;">ARM SYSTEM</button>
+            <button class="btn btn-green control-btn" data-device="mode" data-state="OFF" style="flex-grow: 1; margin: 0;">DISARM SYSTEM</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>LCD Screen Message</h3>
+        <p style="margin-bottom: 15px;">Sends a custom message string to be displayed on the device's LCD screen (Max 32 characters).</p>
+        <form id="lcd-form" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+            <input type="text" id="lcd-message" maxlength="32" placeholder="Enter message (e.g., 'Welcome Home')" required>
+            <button type="submit" class="btn btn-yellow" style="width: 100%; margin: 0;">Send Message to Screen</button>
+        </form>
+    </div>
+</div>
+
+<div style="margin-top: 3rem;">
+    <p id="status-message" class="status-block status-block-info">Click a button or send a message to issue a command.</p>
+</div>
+
+<script>
+
+    document.querySelectorAll('.control-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const device = this.getAttribute('data-device');
+            const state = this.getAttribute('data-state');
+            const statusMessage = document.getElementById('status-message');
+            
+            statusMessage.textContent = `Sending command to set ${device} to ${state}...`;
+            statusMessage.className = 'status-block status-block-info';
+
+            fetch(`/api/control/${device}/${state}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+             
+                const className = (device === 'mode') ? 'status-block-info' : (data.success ? 'status-block-success' : 'status-block-error');
+                statusMessage.textContent = data.message;
+                statusMessage.className = `status-block ${className}`;
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                statusMessage.textContent = `Network Error: Could not reach the server.`;
+                statusMessage.className = 'status-block status-block-error';
+            });
+        });
+    });
+
+    document.getElementById('lcd-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const message = document.getElementById('lcd-message').value.trim();
+        const statusMessage = document.getElementById('status-message');
+        const MAX_LENGTH = 32;
+
+        if (!message) {
+            statusMessage.textContent = "Message cannot be empty.";
+            statusMessage.className = 'status-block status-block-error';
+            return;
+        }
+
+        if (message.length > MAX_LENGTH) {
+            statusMessage.textContent = `Error: Message is too long. Max ${MAX_LENGTH} characters.`;
+            statusMessage.className = 'status-block status-block-error';
+            return;
+        }
+
+        const encodedMessage = encodeURIComponent(message);
+        
+        statusMessage.textContent = `Sending text message: "${message}"...`;
+        statusMessage.className = 'status-block status-block-info';
+
+        fetch(`/api/control/lcd_text/${encodedMessage}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const className = data.success ? 'status-block-info' : 'status-block-error'; 
+            statusMessage.textContent = data.message;
+            statusMessage.className = `status-block ${className}`;
+            if (data.success) {
+                document.getElementById('lcd-message').value = ''; 
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            statusMessage.textContent = `Network Error: Could not reach the server.`;
+            statusMessage.className = 'status-block status-block-error';
+        });
+    });
+</script>
+{% endblock %}
